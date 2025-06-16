@@ -95,6 +95,11 @@ const val PICK_CONTACT_INTENT = 48
 const val BLOCKED_KEYWORDS_EXPORT_DELIMITER = ","
 const val BLOCKED_KEYWORDS_EXPORT_EXTENSION = ".txt"
 
+const val AI_API_URL = "ai_api_url"
+const val AI_API_KEY = "ai_api_key"
+const val AI_API_MODEL = "ai_api_model"
+const val AI_PROMPT = "ai_prompt"
+
 fun refreshMessages() {
     EventBus.getDefault().post(Events.RefreshMessages())
 }

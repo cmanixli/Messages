@@ -433,6 +433,75 @@
             </RelativeLayout>
 
             <include
+                android:id="@+id/settings_api_divider"
+                layout="@layout/divider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/settings_api_label"
+                style="@style/SettingsSectionLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/api" />
+
+            <RelativeLayout
+                android:id="@+id/settings_api_url_holder"
+                style="@style/SettingsHolderTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <org.fossify.commons.views.MyTextView
+                    android:id="@+id/settings_api_url_label"
+                    style="@style/SettingsTextLabelStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/url" />
+
+                <org.fossify.commons.views.MyEditText
+                    android:id="@+id/settings_api_url"
+                    style="@style/SettingsTextValueStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/settings_api_url_label"
+                    tools:text="@string/api_url" />
+
+                <org.fossify.commons.views.MyTextView
+                    android:id="@+id/settings_api_key_label"
+                    style="@style/SettingsTextLabelStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/settings_api_url"
+                    android:text="@string/api_key" />
+
+                <org.fossify.commons.views.MyEditText
+                    android:id="@+id/settings_api_key"
+                    style="@style/SettingsTextValueStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/settings_api_key_label"
+                    android:inputType="textPassword"
+                    tools:text="@string/api_key" />
+
+                <org.fossify.commons.views.MyTextView
+                    android:id="@+id/settings_api_model_label"
+                    style="@style/SettingsTextLabelStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/settings_api_key"
+                    android:text="@string/ai_model" />
+
+                <org.fossify.commons.views.MyEditText
+                    android:id="@+id/settings_api_model"
+                    style="@style/SettingsTextValueStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/settings_api_model_label"
+                    tools:text="@string/ai_model" />
+
+            </RelativeLayout>
+
+            <include
                 android:id="@+id/settings_migrating_divider"
                 layout="@layout/divider" />
 

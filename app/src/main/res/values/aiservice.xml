@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_url" translatable="false">http://127.0.0.1:11343</string>
+    <string name="ollama" translatable="false">Ollama</string>
+    <string name="openai" translatable="false">OpenAI</string>"
+    <string name="api_key" translatable="false">API Key</string>
+    <string name="ai_model" translatable="false">AI Model</string>
+</resources>

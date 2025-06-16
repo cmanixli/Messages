@@ -9,20 +9,7 @@ import org.fossify.commons.dialogs.ConfirmationDialog
 import org.fossify.commons.dialogs.FeatureLockedDialog
 import org.fossify.commons.dialogs.RadioGroupDialog
 import org.fossify.commons.dialogs.SecurityDialog
-import org.fossify.commons.extensions.addLockedLabelIfNeeded
-import org.fossify.commons.extensions.beGone
-import org.fossify.commons.extensions.beGoneIf
-import org.fossify.commons.extensions.beVisible
-import org.fossify.commons.extensions.beVisibleIf
-import org.fossify.commons.extensions.getBlockedNumbers
-import org.fossify.commons.extensions.getCustomizeColorsString
-import org.fossify.commons.extensions.getFontSizeText
-import org.fossify.commons.extensions.getProperPrimaryColor
-import org.fossify.commons.extensions.isOrWasThankYouInstalled
-import org.fossify.commons.extensions.launchPurchaseThankYouIntent
-import org.fossify.commons.extensions.toast
-import org.fossify.commons.extensions.updateTextColors
-import org.fossify.commons.extensions.viewBinding
+import org.fossify.commons.extensions.*
 import org.fossify.commons.helpers.FONT_SIZE_EXTRA_LARGE
 import org.fossify.commons.helpers.FONT_SIZE_LARGE
 import org.fossify.commons.helpers.FONT_SIZE_MEDIUM
@@ -130,6 +117,9 @@ class SettingsActivity : SimpleActivity() {
         setupAppPasswordProtection()
         setupMessagesExport()
         setupMessagesImport()
+        setupAiUrl()
+        setupAiKey()
+        setupAiModel()
         updateTextColors(binding.settingsNestedScrollview)
 
         if (
@@ -472,4 +462,25 @@ class SettingsActivity : SimpleActivity() {
             else -> R.string.mms_file_size_limit_none
         }
     )
+
+    private fun setupAiUrl() = binding.apply() {
+        settingsApiUrl.setText(config.aiApiUrl)
+        settingsApiUrl.onTextChangeListener {
+            config.aiApiUrl = settingsApiUrl.value
+        }
+    }
+
+    private fun setupAiKey() = binding.apply() {
+        settingsApiKey.setText(config.aiApiKey)
+        settingsApiKey.onTextChangeListener {
+            config.aiApiKey = settingsApiKey.value
+        }
+    }
+
+    private fun setupAiModel() = binding.apply() {
+        settingsApiModel.setText(config.aiApiModel)
+        settingsApiModel.onTextChangeListener {
+            config.aiApiModel = settingsApiModel.value
+        }
+    }
 }

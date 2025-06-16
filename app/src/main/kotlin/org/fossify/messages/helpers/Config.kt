@@ -6,6 +6,7 @@ import org.fossify.messages.extensions.getDefaultKeyboardHeight
 import org.fossify.messages.models.Conversation
 
 class Config(context: Context) : BaseConfig(context) {
+
     companion object {
         fun newInstance(context: Context) = Config(context)
     }
@@ -143,4 +144,20 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getString(LAST_BLOCKED_KEYWORD_EXPORT_PATH, "")!!
         set(lastBlockedNumbersExportPath) = prefs.edit()
             .putString(LAST_BLOCKED_KEYWORD_EXPORT_PATH, lastBlockedNumbersExportPath).apply()
+
+    var aiApiUrl: String
+        get() = prefs.getString(AI_API_URL, "http://127.0.0.1:11434")!!
+        set(aiApiUrl) = prefs.edit().putString(AI_API_URL, aiApiUrl).apply()
+
+    var aiApiKey: String
+        get() = prefs.getString(AI_API_KEY, "")!!
+        set(aiApiKey) = prefs.edit().putString(AI_API_KEY, aiApiKey).apply()
+
+    var aiApiModel: String
+        get() = prefs.getString(AI_API_MODEL, "Gemma3")!!
+        set(aiApiModel) = prefs.edit().putString(AI_API_MODEL, aiApiModel).apply()
+
+    var aiPrompt: String
+        get() = prefs.getString(AI_PROMPT, "Your role is to read the SMS/MMS sentence and evaluate in one line whether it is smishing or spam. Your response must be in the same language as the given text. Text: ")!!
+        set(aiPrompt) = prefs.edit().putString(AI_PROMPT, aiPrompt).apply()
 }

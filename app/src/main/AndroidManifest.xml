@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -25,7 +26,8 @@
         <package android:name="org.fossify.contacts" />
     </queries>
 
-    <uses-feature android:name="android.hardware.telephony" />
+    <uses-feature android:name="android.hardware.telephony"
+        android:required="false" />
 
     <application
         android:name=".App"
@@ -35,7 +37,8 @@
         android:label="@string/app_launcher_name"
         android:localeConfig="@xml/locale_config"
         android:roundIcon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:targetApi="33">
 
         <activity
             android:name=".activities.SplashActivity"

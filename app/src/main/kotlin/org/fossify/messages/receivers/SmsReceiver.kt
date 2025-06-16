@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.provider.Telephony
+import kotlinx.coroutines.runBlocking
 import org.fossify.commons.extensions.baseConfig
 import org.fossify.commons.extensions.getMyContactsCursor
 import org.fossify.commons.extensions.isNumberBlocked
@@ -17,6 +18,7 @@ import org.fossify.messages.extensions.*
 import org.fossify.messages.helpers.ReceiverUtils.isMessageFilteredOut
 import org.fossify.messages.helpers.refreshMessages
 import org.fossify.messages.models.Message
+import org.fossify.messages.aiservices.OllamaApi
 
 class SmsReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -69,14 +71,17 @@ class SmsReceiver : BroadcastReceiver() {
         if (isMessageFilteredOut(context, body)) {
             return
         }
-
+        var result = body
+        var aiResponse = runBlocking { OllamaApi(context).generateText(body) }
+        if (aiResponse != null) result += aiResponse
         val photoUri = SimpleContactsHelper(context).getPhotoUriFromPhoneNumber(address)
         val bitmap = context.getNotificationBitmap(photoUri)
         Handler(Looper.getMainLooper()).post {
             if (!context.isNumberBlocked(address)) {
                 val privateCursor = context.getMyContactsCursor(favoritesOnly = false, withPhoneNumbersOnly = true)
                 ensureBackgroundThread {
-                    val newMessageId = context.insertNewSMS(address, subject, body, date, read, threadId, type, subscriptionId)
+
+                    val newMessageId = context.insertNewSMS(address, subject, result, date, read, threadId, type, subscriptionId)
 
                     val conversation = context.getConversations(threadId).firstOrNull() ?: return@ensureBackgroundThread
                     try {
@@ -98,7 +103,7 @@ class SmsReceiver : BroadcastReceiver() {
                     val message =
                         Message(
                             newMessageId,
-                            body,
+                            result,
                             type,
                             status,
                             participants,
@@ -117,7 +122,7 @@ class SmsReceiver : BroadcastReceiver() {
                         context.updateConversationArchivedStatus(threadId, false)
                     }
                     refreshMessages()
-                    context.showReceivedMessageNotification(newMessageId, address, body, threadId, bitmap)
+                    context.showReceivedMessageNotification(newMessageId, address, result, threadId, bitmap)
                 }
             }
         }
