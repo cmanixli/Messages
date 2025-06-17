@@ -26,19 +26,9 @@ import org.fossify.messages.databinding.ActivitySettingsBinding
 import org.fossify.messages.dialogs.ExportMessagesDialog
 import org.fossify.messages.extensions.config
 import org.fossify.messages.extensions.emptyMessagesRecycleBin
+import org.fossify.messages.extensions.getAiServiceText
 import org.fossify.messages.extensions.messagesDB
-import org.fossify.messages.helpers.FILE_SIZE_100_KB
-import org.fossify.messages.helpers.FILE_SIZE_1_MB
-import org.fossify.messages.helpers.FILE_SIZE_200_KB
-import org.fossify.messages.helpers.FILE_SIZE_2_MB
-import org.fossify.messages.helpers.FILE_SIZE_300_KB
-import org.fossify.messages.helpers.FILE_SIZE_600_KB
-import org.fossify.messages.helpers.FILE_SIZE_NONE
-import org.fossify.messages.helpers.LOCK_SCREEN_NOTHING
-import org.fossify.messages.helpers.LOCK_SCREEN_SENDER
-import org.fossify.messages.helpers.LOCK_SCREEN_SENDER_MESSAGE
-import org.fossify.messages.helpers.MessagesImporter
-import org.fossify.messages.helpers.refreshMessages
+import org.fossify.messages.helpers.*
 import java.util.Locale
 import kotlin.system.exitProcess
 
@@ -117,9 +107,11 @@ class SettingsActivity : SimpleActivity() {
         setupAppPasswordProtection()
         setupMessagesExport()
         setupMessagesImport()
+        setupAiService()
         setupAiUrl()
         setupAiKey()
         setupAiModel()
+        setupAiPrompt()
         updateTextColors(binding.settingsNestedScrollview)
 
         if (
@@ -463,6 +455,21 @@ class SettingsActivity : SimpleActivity() {
         }
     )
 
+    private fun setupAiService() = binding.apply {
+        settingsAiService.text = getAiServiceText()
+        settingsAiServiceHolder.setOnClickListener {
+            val items = arrayListOf(
+                RadioItem(OLLAMA, getString(R.string.ollama)),
+                RadioItem(OPENAI, getString(R.string.openai)),
+            )
+
+            RadioGroupDialog(this@SettingsActivity, items, config.aiApiService) {
+                config.aiApiService = it as Int
+                settingsAiService.text = getAiServiceText()
+            }
+        }
+    }
+
     private fun setupAiUrl() = binding.apply() {
         settingsApiUrl.setText(config.aiApiUrl)
         settingsApiUrl.onTextChangeListener {
@@ -481,6 +488,13 @@ class SettingsActivity : SimpleActivity() {
         settingsApiModel.setText(config.aiApiModel)
         settingsApiModel.onTextChangeListener {
             config.aiApiModel = settingsApiModel.value
+        }
+    }
+
+    private fun setupAiPrompt() = binding.apply() {
+        settingsAiPrompt.setText(config.aiPrompt)
+        settingsAiPrompt.onTextChangeListener {
+            config.aiPrompt = settingsAiPrompt.value
         }
     }
 }

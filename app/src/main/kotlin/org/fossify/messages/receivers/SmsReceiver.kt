@@ -14,6 +14,7 @@ import org.fossify.commons.helpers.SimpleContactsHelper
 import org.fossify.commons.helpers.ensureBackgroundThread
 import org.fossify.commons.models.PhoneNumber
 import org.fossify.commons.models.SimpleContact
+import org.fossify.messages.aiservices.AiServiceFactory
 import org.fossify.messages.extensions.*
 import org.fossify.messages.helpers.ReceiverUtils.isMessageFilteredOut
 import org.fossify.messages.helpers.refreshMessages
@@ -72,7 +73,7 @@ class SmsReceiver : BroadcastReceiver() {
             return
         }
         var result = body
-        var aiResponse = runBlocking { OllamaApi(context).generateText(body) }
+        val aiResponse = runBlocking { AiServiceFactory.create(context).generateText(body) }
         if (aiResponse != null) result += aiResponse
         val photoUri = SimpleContactsHelper(context).getPhotoUriFromPhoneNumber(address)
         val bitmap = context.getNotificationBitmap(photoUri)

@@ -145,6 +145,11 @@ class Config(context: Context) : BaseConfig(context) {
         set(lastBlockedNumbersExportPath) = prefs.edit()
             .putString(LAST_BLOCKED_KEYWORD_EXPORT_PATH, lastBlockedNumbersExportPath).apply()
 
+
+    var aiApiService: Int
+        get() = prefs.getInt(AI_API_SERVICE, OLLAMA)
+        set(aiApiService) = prefs.edit().putInt(AI_API_SERVICE, aiApiService).apply()
+
     var aiApiUrl: String
         get() = prefs.getString(AI_API_URL, "http://127.0.0.1:11434")!!
         set(aiApiUrl) = prefs.edit().putString(AI_API_URL, aiApiUrl).apply()

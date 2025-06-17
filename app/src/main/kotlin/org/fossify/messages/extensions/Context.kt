@@ -52,14 +52,8 @@ import org.fossify.commons.models.PhoneNumber
 import org.fossify.commons.models.SimpleContact
 import org.fossify.messages.R
 import org.fossify.messages.databases.MessagesDatabase
+import org.fossify.messages.helpers.*
 import org.fossify.messages.helpers.AttachmentUtils.parseAttachmentNames
-import org.fossify.messages.helpers.Config
-import org.fossify.messages.helpers.FILE_SIZE_NONE
-import org.fossify.messages.helpers.MAX_MESSAGE_LENGTH
-import org.fossify.messages.helpers.MESSAGES_LIMIT
-import org.fossify.messages.helpers.NotificationHelper
-import org.fossify.messages.helpers.ShortcutHelper
-import org.fossify.messages.helpers.generateRandomId
 import org.fossify.messages.interfaces.AttachmentsDao
 import org.fossify.messages.interfaces.ConversationsDao
 import org.fossify.messages.interfaces.DraftsDao
@@ -1335,3 +1329,10 @@ fun Context.clearExpiredScheduledMessages(threadId: Long, messagesToDelete: List
 fun Context.getDefaultKeyboardHeight(): Int {
     return resources.getDimensionPixelSize(R.dimen.default_keyboard_height)
 }
+
+fun Context.getAiServiceText() = getString(
+    when (config.aiApiService) {
+        OPENAI -> R.string.openai
+        else -> R.string.ollama
+    }
+)

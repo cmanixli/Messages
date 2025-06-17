@@ -1,32 +1,29 @@
 package org.fossify.messages.aiservices
 
 import android.content.Context
-import org.fossify.messages.extensions.config
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.Serializable
+import org.fossify.messages.extensions.config
 
-abstract class BaseAiService(private var context: Context) {
-    protected val client = HttpClient(CIO) {
+abstract class BaseAiService(private val context: Context) {
+    @Serializable
+    data class Request (
+        val model: String,
+        val prompt: String,
+        val stream: Boolean,
+    )
+    open val client = HttpClient(CIO) {
         engine {
             requestTimeout = 100_000
         }
         install(ContentNegotiation) {
             json()
         }
-        install(Auth) {
-            bearer {
-                loadTokens {
-                    BearerTokens(context.config.aiApiKey, "")
-                }
-            }
-        }
     }
-    protected val testPrompt = "Your role is to read the SMS/MMS sentence and evaluate in one line whether it is smishing or spam. Your response must be in the same language as the given text. Text: "
+    protected var config = context.config
 
-    abstract suspend fun generateText(promptText: String): String?
-
+    abstract suspend fun generateText(message: String): String?
 }
