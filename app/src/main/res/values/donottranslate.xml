@@ -11,4 +11,12 @@
     <string name="sms">SMS</string>
     <string name="mms">MMS</string>
     <string name="message_details_sim">SIM</string>
+
+    <string name="ai_service">AI Service</string>"
+    <string name="api_url">API URL</string>
+    <string name="ollama">Ollama</string>
+    <string name="openai">OpenAI</string>"
+    <string name="api_key">API Key</string>
+    <string name="ai_model">AI Model</string>
+    <string name="ai_prompt">Default Prompt</string>
 </resources>
