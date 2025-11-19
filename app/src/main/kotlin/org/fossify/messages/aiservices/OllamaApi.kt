@@ -6,26 +6,27 @@ import io.ktor.http.*
 import android.content.Context
 import org.fossify.messages.extensions.config
 import io.ktor.client.call.body
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.fossify.commons.helpers.mydebug
 
 class OllamaApi(private var context: Context) : BaseAiService(context) {
+    @OptIn(ExperimentalSerializationApi::class)
     @Serializable
     @JsonIgnoreUnknownKeys
     data class Response (
-        val model: String,
-        val created_at: String,
-        val response: String,
+        var model: String,
+        var remote_model: String,
+        var remote_host: String,
+        var created_at: String,
+        var response: String,
         var done: Boolean,
         var done_reason: String,
-        var context: ArrayList<Int>,
         var total_duration: Double,
-        var load_duration: Double,
         var prompt_eval_count: Int,
-        var prompt_eval_duration: Double,
         var eval_count: Int,
-        var eval_duration: Double
     )
 
     override suspend fun generateText(message: String): String? {
@@ -40,8 +41,9 @@ class OllamaApi(private var context: Context) : BaseAiService(context) {
             }
 
             if (httpResponse.status == HttpStatusCode.OK) {
-                val response = httpResponse.body<Response>()
-                "\n\n[AI Report]\n" + response.response
+                val response: Response = Json.decodeFromString(httpResponse.bodyAsText())
+                // val response = httpResponse.body<Response>()
+                "[AI Report]\n" + response.response
             } else {
                 mydebug("Ollama API Error: ${httpResponse.status} - ${httpResponse.bodyAsText()}")
                 null

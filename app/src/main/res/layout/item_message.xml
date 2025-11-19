@@ -65,5 +65,20 @@
             android:textSize="@dimen/normal_text_size"
             tools:drawableEndCompat="@drawable/scheduled_message_icon"
             tools:text="Message content" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/thread_message_ai_response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/thread_message_body"
+            android:layout_alignStart="@id/thread_message_body"
+            android:layout_alignEnd="@id/thread_message_body"
+            android:layout_marginTop="@dimen/tiny_margin"
+            android:background="@drawable/item_ai_response_background"
+            android:padding="@dimen/normal_margin"
+            android:textSize="@dimen/normal_text_size"
+            android:visibility="gone"
+            tools:text="AI response"
+            tools:visibility="visible" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

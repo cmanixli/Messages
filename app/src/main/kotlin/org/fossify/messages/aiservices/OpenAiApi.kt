@@ -10,6 +10,7 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.fossify.commons.helpers.mydebug
 
@@ -58,7 +59,8 @@ class OpenAiApi(private var context: Context) : BaseAiService(context) {
             }
 
             if (httpResponse.status == HttpStatusCode.OK) {
-                val response = httpResponse.body<Response>()
+                // val response = httpResponse.body<Response>()
+                val response: Response = Json.decodeFromString(httpResponse.bodyAsText())
                 "\n\n[AI Report]\n" + response.output.content.text
             } else {
                 mydebug("OpenAI API Error: ${httpResponse.status} - ${httpResponse.bodyAsText()}")

@@ -34,6 +34,7 @@ import org.fossify.commons.extensions.beGone
 import org.fossify.commons.extensions.beVisible
 import org.fossify.commons.extensions.beVisibleIf
 import org.fossify.commons.extensions.copyToClipboard
+import org.fossify.commons.extensions.darkenColor
 import org.fossify.commons.extensions.formatDateOrTime
 import org.fossify.commons.extensions.getContrastColor
 import org.fossify.commons.extensions.getProperPrimaryColor
@@ -362,6 +363,20 @@ class ThreadAdapter(
                 }
             }
 
+            if (message.aiResponse != null) {
+                val primaryColor = activity.getProperPrimaryColor()
+                val darkColor = primaryColor.darkenColor()
+                threadMessageAiResponse.apply {
+                    text = message.aiResponse
+                    background = AppCompatResources.getDrawable(activity, R.drawable.item_ai_response_background)
+                    background.applyColorFilter(darkColor)
+                    setTextColor(darkColor.getContrastColor())
+                    beVisible()
+                }
+            } else {
+                threadMessageAiResponse.beGone()
+            }
+
             if (message.isReceivedMessage()) {
                 setupReceivedMessageView(messageBinding = this, message = message)
             } else {
@@ -605,6 +620,8 @@ class ThreadAdapter(
             setTextColor(textColor)
         }
     }
+
+
 
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)

@@ -106,8 +106,14 @@ const val AI_API_KEY = "ai_api_key"
 const val AI_API_MODEL = "ai_api_model"
 const val AI_PROMPT = "ai_prompt"
 
-const val OLLAMA = 0
-const val OPENAI = 1
+enum class AiService(val toString: String) {
+    OLLAMA("Ollama"),
+    OPENAI("OpenAI"),
+    GEMINI("Gemini"),
+    ONDEVICE("OnDevice"),
+
+    AIDISABLED("Disabled");
+}
 
 fun refreshMessages() {
     EventBus.getDefault().post(Events.RefreshMessages())

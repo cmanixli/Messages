@@ -427,21 +427,25 @@ class ThreadActivity : SimpleActivity() {
         }
     }
 
+    private fun getMessagesFromDb(): ArrayList<Message> {
+        return try {
+            if (isRecycleBin) {
+                messagesDB.getThreadMessagesFromRecycleBin(threadId)
+            } else {
+                if (config.useRecycleBin) {
+                    messagesDB.getNonRecycledThreadMessages(threadId)
+                } else {
+                    messagesDB.getThreadMessages(threadId)
+                }
+            }.toMutableList() as ArrayList<Message>
+        } catch (e: Exception) {
+            ArrayList()
+        }
+    }
+
     private fun setupCachedMessages(callback: () -> Unit) {
         ensureBackgroundThread {
-            messages = try {
-                if (isRecycleBin) {
-                    messagesDB.getThreadMessagesFromRecycleBin(threadId)
-                } else {
-                    if (config.useRecycleBin) {
-                        messagesDB.getNonRecycledThreadMessages(threadId)
-                    } else {
-                        messagesDB.getThreadMessages(threadId)
-                    }
-                }.toMutableList() as ArrayList<Message>
-            } catch (e: Exception) {
-                ArrayList()
-            }
+            messages = getMessagesFromDb()
             clearExpiredScheduledMessages(threadId, messages)
             messages.removeAll { it.isScheduled && it.millis() < System.currentTimeMillis() }
 
@@ -484,11 +488,7 @@ class ThreadActivity : SimpleActivity() {
 
             val cachedMessagesCode = messages.clone().hashCode()
             if (!isRecycleBin) {
-                messages = getMessages(threadId)
-                if (config.useRecycleBin) {
-                    val recycledMessages = messagesDB.getThreadMessagesFromRecycleBin(threadId)
-                    messages = messages.filterNotInByKey(recycledMessages) { it.getStableId() }
-                }
+                messages = getMessagesFromDb()
             }
 
             val hasParticipantWithoutName = participants.any { contact ->
@@ -1771,7 +1771,7 @@ class ThreadActivity : SimpleActivity() {
 
         val lastMaxId = messages.filterNot { it.isScheduled }.maxByOrNull { it.id }?.id ?: 0L
         val newThreadId = getThreadId(participants.getAddresses().toSet())
-        val newMessages = getMessages(newThreadId, includeScheduledMessages = false)
+        val newMessages = getMessagesFromDb()
         if (messages.isNotEmpty() && messages.all { it.isScheduled } && newMessages.isNotEmpty()) {
             // update scheduled messages with real thread id
             threadId = newThreadId

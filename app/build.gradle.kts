@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.Packaging
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
@@ -128,6 +129,12 @@ android {
             enableSplit = false
         }
     }
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/DEPENDENCIES")
+            pickFirsts.add("META-INF/INDEX.LIST")
+        }
+    }
 }
 
 detekt {
@@ -149,6 +156,9 @@ dependencies {
     implementation(libs.ez.vcard)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.bundles.room)
+    implementation(libs.google.genai)
+    implementation(libs.genai.prompt)
+    implementation(libs.genai.common)
     ksp(libs.androidx.room.compiler)
     detektPlugins(libs.compose.detekt)
     implementation(libs.ktor.client.core)

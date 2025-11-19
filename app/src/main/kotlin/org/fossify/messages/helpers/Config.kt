@@ -151,7 +151,7 @@ class Config(context: Context) : BaseConfig(context) {
             .putBoolean(KEEP_CONVERSATIONS_ARCHIVED, keepConversationsArchived).apply()
 
     var aiApiService: Int
-        get() = prefs.getInt(AI_API_SERVICE, OLLAMA)
+        get() = prefs.getInt(AI_API_SERVICE, AiService.OLLAMA.ordinal)
         set(aiApiService) = prefs.edit().putInt(AI_API_SERVICE, aiApiService).apply()
 
     var aiApiUrl: String

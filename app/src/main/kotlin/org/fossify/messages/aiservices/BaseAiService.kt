@@ -6,6 +6,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.fossify.messages.extensions.config
 
 abstract class BaseAiService(private val context: Context) {
@@ -20,7 +21,9 @@ abstract class BaseAiService(private val context: Context) {
             requestTimeout = 100_000
         }
         install(ContentNegotiation) {
-            json()
+            json(Json {
+                ignoreUnknownKeys = true
+            })
         }
     }
     protected var config = context.config

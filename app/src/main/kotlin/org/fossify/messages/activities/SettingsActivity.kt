@@ -3,6 +3,7 @@ package org.fossify.messages.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import kotlinx.coroutines.runBlocking
 import org.fossify.commons.activities.ManageBlockedNumbersActivity
 import org.fossify.commons.dialogs.ChangeDateTimeFormatDialog
 import org.fossify.commons.dialogs.ConfirmationDialog
@@ -20,7 +21,8 @@ import org.fossify.commons.extensions.isOrWasThankYouInstalled
 import org.fossify.commons.extensions.toast
 import org.fossify.commons.extensions.updateTextColors
 import org.fossify.commons.extensions.viewBinding
-// import org.fossify.commons.extensions.*
+import org.fossify.commons.extensions.onTextChangeListener
+import org.fossify.commons.extensions.value
 import org.fossify.commons.helpers.FONT_SIZE_EXTRA_LARGE
 import org.fossify.commons.helpers.FONT_SIZE_LARGE
 import org.fossify.commons.helpers.FONT_SIZE_MEDIUM
@@ -33,12 +35,14 @@ import org.fossify.commons.helpers.isQPlus
 import org.fossify.commons.helpers.isTiramisuPlus
 import org.fossify.commons.models.RadioItem
 import org.fossify.messages.R
+import org.fossify.messages.aiservices.AiServiceFactory
 import org.fossify.messages.databinding.ActivitySettingsBinding
 import org.fossify.messages.dialogs.ExportMessagesDialog
 import org.fossify.messages.extensions.config
 import org.fossify.messages.extensions.emptyMessagesRecycleBin
-import org.fossify.messages.extensions.getAiServiceText
 import org.fossify.messages.extensions.messagesDB
+import org.fossify.messages.extensions.toArrayList
+import org.fossify.messages.helpers.AiService
 import org.fossify.messages.helpers.FILE_SIZE_100_KB
 import org.fossify.messages.helpers.FILE_SIZE_1_MB
 import org.fossify.messages.helpers.FILE_SIZE_200_KB
@@ -51,7 +55,6 @@ import org.fossify.messages.helpers.LOCK_SCREEN_SENDER
 import org.fossify.messages.helpers.LOCK_SCREEN_SENDER_MESSAGE
 import org.fossify.messages.helpers.MessagesImporter
 import org.fossify.messages.helpers.refreshConversations
-//import org.fossify.messages.helpers.*
 import java.util.Locale
 import kotlin.system.exitProcess
 
@@ -474,16 +477,13 @@ class SettingsActivity : SimpleActivity() {
     )
 
     private fun setupAiService() = binding.apply {
-        settingsAiService.text = getAiServiceText()
+        settingsAiService.text = AiService.entries[config.aiApiService].toString
         settingsAiServiceHolder.setOnClickListener {
-            val items = arrayListOf(
-                RadioItem(OLLAMA, getString(R.string.ollama)),
-                RadioItem(OPENAI, getString(R.string.openai)),
-            )
-
+            val items = AiService.entries.map { service -> RadioItem(service.ordinal, service.toString) }.toArrayList()
             RadioGroupDialog(this@SettingsActivity, items, config.aiApiService) {
                 config.aiApiService = it as Int
-                settingsAiService.text = getAiServiceText()
+                settingsAiService.text = AiService.entries[config.aiApiService].toString
+                settingsAiServiceLog.text = runBlocking { AiServiceFactory.create(this@SettingsActivity).generateText("Who are you?") }
             }
         }
     }

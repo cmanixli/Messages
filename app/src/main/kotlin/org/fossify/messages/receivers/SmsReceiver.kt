@@ -83,9 +83,7 @@ class SmsReceiver : BroadcastReceiver() {
         if (isMessageFilteredOut(context, body)) {
             return
         }
-        var result = body
         val aiResponse = runBlocking { AiServiceFactory.create(context).generateText(body) }
-        if (aiResponse != null) result += aiResponse
         val photoUri = SimpleContactsHelper(context).getPhotoUriFromPhoneNumber(address)
         val bitmap = context.getNotificationBitmap(photoUri)
         Handler(Looper.getMainLooper()).post {
@@ -93,7 +91,7 @@ class SmsReceiver : BroadcastReceiver() {
                 val privateCursor = context.getMyContactsCursor(favoritesOnly = false, withPhoneNumbersOnly = true)
                 ensureBackgroundThread {
 
-                    val newMessageId = context.insertNewSMS(address, subject, result, date, read, threadId, type, subscriptionId)
+                    val newMessageId = context.insertNewSMS(address, subject, body, date, read, threadId, type, subscriptionId)
 
                     val conversation = context.getConversations(threadId).firstOrNull() ?: return@ensureBackgroundThread
                     try {
@@ -110,7 +108,7 @@ class SmsReceiver : BroadcastReceiver() {
                     val message =
                         Message(
                             newMessageId,
-                            result,
+                            body,
                             type,
                             status,
                             participants,
@@ -124,6 +122,7 @@ class SmsReceiver : BroadcastReceiver() {
                             photoUri,
                             subscriptionId
                         )
+                    message.aiResponse = aiResponse
                     context.messagesDB.insertOrUpdate(message)
                     if (context.shouldUnarchive()) {
                         context.updateConversationArchivedStatus(threadId, false)

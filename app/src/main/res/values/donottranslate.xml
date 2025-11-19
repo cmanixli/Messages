@@ -16,6 +16,8 @@
     <string name="api_url">API URL</string>
     <string name="ollama">Ollama</string>
     <string name="openai">OpenAI</string>"
+    <string name="gemini">Gemini</string>
+    <string name="ondevice">OnDevice</string>"
     <string name="api_key">API Key</string>
     <string name="ai_model">AI Model</string>
     <string name="ai_prompt">Default Prompt</string>
